@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
+
+                //disable second choice
+                parent.setOnItemClickListener(null);
             }
         });
 
