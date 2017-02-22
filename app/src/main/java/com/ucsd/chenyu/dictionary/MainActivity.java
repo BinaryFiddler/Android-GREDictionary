@@ -1,5 +1,6 @@
 package com.ucsd.chenyu.dictionary;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -92,13 +93,23 @@ public class MainActivity extends AppCompatActivity {
                 String newWord = wordField.getText().toString();
                 if (dict.get(newWord).equals(defPicked)){
                     totalPoints++;
+                    view.setBackgroundColor(Color.GREEN);
                     pointsField.setText("AWESOME! POINTS + 1: " + totalPoints);
                 }else{
                     totalPoints--;
+                    view.setBackgroundColor(Color.RED);
                     pointsField.setText("Uh... POINTS - 1: " + totalPoints);
+                }
+                for (int i=0; i<5; i++){
+                    if (dict.get(newWord).equals(parent.getItemAtPosition(i).toString())) {
+                        parent.getChildAt(i).setBackgroundColor(Color.GREEN);
+                        break;
+                    }
                 }
             }
         });
+
+
     }
 
 
