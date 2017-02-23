@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -31,11 +32,19 @@ public class SearchActivity extends AppCompatActivity {
 
     public void searchAndDisplay(View view) {
         TextView def = (TextView)findViewById(R.id.definition);
+        WebView webview = (WebView)findViewById(R.id.web_search);
         EditText edit = (EditText)findViewById(R.id.word);
-        if(dict.containsKey(edit.getText().toString()))
+        if(dict.containsKey(edit.getText().toString())){
             def.setText(dict.get(edit.getText().toString()));
-        else
-            def.setText("Word not in current dictionary");
+            def.setVisibility(View.VISIBLE);
+            webview.setVisibility(View.GONE);
+        }
+        else{
+            String url = new String("http://www.dictionary.com/browse/" + edit.getText().toString());
+            webview.loadUrl(url);
+            def.setVisibility(View.GONE);
+            webview.setVisibility(View.VISIBLE);
+        }
         hideKeyBoard(view);
     }
 
