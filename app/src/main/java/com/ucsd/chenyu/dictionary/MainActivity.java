@@ -1,5 +1,6 @@
 package com.ucsd.chenyu.dictionary;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,10 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
+import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +21,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final static int REQ_CODE_ADD_WORDS = 1;
 
     private Map<String, String> dict;
     private List<String> words;
@@ -39,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void loadDictionary(){
-
         dict = new HashMap<>();
         words = new ArrayList<>();
         definitions = new ArrayList<>();
@@ -51,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
             words.add(line[0]);
             definitions.add(line[1]);
         }
-        Log.d("Debug", Integer.toString(words.size()));
-
         scan.close();
     }
 
@@ -106,17 +105,24 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
-
                 //disable second choice
                 parent.setOnItemClickListener(null);
             }
         });
-
-
     }
 
 
     public void pick(View view) {
         pickWord();
+    }
+
+    public void searchWord(View view) {
+        //.class syntax is a class object representing that class
+        //Intent(current activity, target activity)
+//        Intent intent = new Intent(this, AddNewWords.class);
+//        startActivityForResult(intent, REQ_CODE_ADD_WORDS);
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("dictionary", (Serializable) dict);
+        startActivity(intent);
     }
 }
