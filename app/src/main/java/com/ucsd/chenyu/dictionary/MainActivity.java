@@ -2,6 +2,8 @@ package com.ucsd.chenyu.dictionary;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private List<String> words;
     private List<String> definitions;
     private int totalPoints;
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         totalPoints = 0;
         loadDictionary();
-        Log.d("Debug", "End loading");
         pickWord();
     }
 
@@ -68,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
         // setting the new word on screen
         String newWord = words.get(rand.nextInt(dictSize));
         wordField.setText(newWord);
+
+        //
+        speak(wordField);
+
 
         //get 5 random definitions
         List<String> choices = new ArrayList<>();
@@ -111,6 +118,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void speak(final TextView wordField) {
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if (i != TextToSpeech.ERROR) {
+                    tts.speak(wordField.getText(), TextToSpeech.QUEUE_FLUSH, null, "pronounce");
+                }
+            }
+        });
+
+    }
+
+
 
     public void pick(View view) {
         pickWord();
@@ -124,5 +144,19 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra("dictionary", (Serializable) dict);
         startActivity(intent);
+    }
+
+    //preserve points through phone rotation
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("points", totalPoints);
+    }
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        totalPoints = savedInstanceState.getInt("points", 0);
+        TextView pointsField = (TextView)findViewById(R.id.points_field);
+        pointsField.setText("Points: " + totalPoints);
     }
 }
