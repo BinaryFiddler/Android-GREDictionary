@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.io.FileNotFoundException;
@@ -26,7 +27,6 @@ import java.util.Scanner;
 public class MainActivity extends AppCompatActivity {
 
     private final static int REQ_CODE_ADD_WORDS = 1;
-
     private Map<String, String> dict;
     private List<String> words;
     private List<String> definitions;
@@ -37,10 +37,33 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        onCreateActivity();
+    }
 
+    public void pick(View view) {
+        pickWord();
+    }
+
+    //initialization
+    private void onCreateActivity() {
         totalPoints = 0;
         loadDictionary();
         pickWord();
+        initializePronunciationButton();
+    }
+
+    private void initializePronunciationButton() {
+        Button pronounce = (Button)findViewById(R.id.pronunciation);
+        pronounce.setText("\uD83D\uDD0A");
+        pronounce.setTextSize(20);
+        pronounce.setBackgroundColor(Color.TRANSPARENT);
+        pronounce.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView wordField = (TextView) findViewById(R.id.word_field);
+                speak(wordField);
+            }
+        });
     }
 
     void loadDictionary(){
@@ -71,10 +94,7 @@ public class MainActivity extends AppCompatActivity {
         // setting the new word on screen
         String newWord = words.get(rand.nextInt(dictSize));
         wordField.setText(newWord);
-
-        //
         speak(wordField);
-
 
         //get 5 random definitions
         List<String> choices = new ArrayList<>();
@@ -116,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 parent.setOnItemClickListener(null);
             }
         });
+
     }
 
     private void speak(final TextView wordField) {
@@ -127,13 +148,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-    }
-
-
-
-    public void pick(View view) {
-        pickWord();
     }
 
     public void searchWord(View view) {

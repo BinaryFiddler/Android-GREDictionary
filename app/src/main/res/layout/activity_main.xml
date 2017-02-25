@@ -12,12 +12,28 @@
     android:gravity="top|center"
     tools:context="com.ucsd.chenyu.dictionary.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/word_field"
-        android:textSize="40sp"
-        android:text="" />
+        android:orientation="horizontal"
+        android:gravity="top|center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/word_field"
+            android:textSize="40sp"
+            android:text="textview" />
+
+        <Button
+            android:id="@+id/pronunciation"
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            />
+    </LinearLayout>
+
 
     <ListView
         android:layout_width="match_parent"
