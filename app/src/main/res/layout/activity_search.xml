@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:hint="Search for..."
             android:imeOptions="actionSearch"
-            android:id="@+id/word" />
+            android:id="@+id/search_bar" />
 
         <Button
             android:layout_width="wrap_content"
@@ -34,15 +34,9 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/definition"/>
-
-    <WebView
-        android:id="@+id/web_search"
-        android:visibility="gone"
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></WebView>
+        android:layout_height="wrap_content"
+        android:id="@+id/definition_field"/>
 
 </LinearLayout>
