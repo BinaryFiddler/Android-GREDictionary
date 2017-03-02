@@ -131,6 +131,17 @@ public class MainActivity extends Activity {
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        dict.openDB(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dict.closeDB();
+    }
 
     @Override
     protected void onStop() {

@@ -81,6 +81,8 @@ public class Database {
 
     public List<String> searchForPotentialMatch(String searchText) {
         List<String> res = new ArrayList<>();
+        if (searchText.length() == 0)
+            return res;
         Cursor cursor = db.rawQuery("SELECT " + COLUMN_WORD + ", " + COLUMN_DEFINITION + " FROM " + TABLE_COMMENT + " WHERE " + COLUMN_WORD + " LIKE '%" + searchText +"%';", null);
         while(cursor.moveToNext()){
             String word = cursor.getString(cursor.getColumnIndex(COLUMN_WORD));
