@@ -7,17 +7,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +35,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SearchActivity extends AppCompatActivity {
-    @BindView(R.id.search_bar) TextView searchBar;
+    @BindView(R.id.search_bar) EditText searchBar;
     @BindView(R.id.definition_field) ListView defnitionField;
-
+    @BindView(R.id.web_search_button) Button webSearchButton;
     Database dict;
 
     @Override
@@ -42,6 +52,16 @@ public class SearchActivity extends AppCompatActivity {
         dict = new Database();
         dict.openDB(this);
         setSearchBarListener();
+        setWebSearchButton();
+    }
+
+    private void setWebSearchButton() {
+        webSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchOnWeb();
+            }
+        });
     }
 
     private void setSearchBarListener() {
@@ -64,8 +84,13 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void updateDefnitionField(List<String> potentialDefs) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, potentialDefs);
+        if (adapter.isEmpty()){
+            searchOnWeb();
+        }
         defnitionField.setAdapter(adapter);
     }
 
@@ -78,5 +103,32 @@ public class SearchActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         dict.closeDB();
+    }
+
+    private void searchOnWeb() {
+        final String word = searchBar.getText().toString();
+        Ion.with(getApplicationContext())
+                .load("http://api.datamuse.com/words?sp=" + word + "*&md=d")
+                .asString()
+                .setCallback(new FutureCallback<String>() {
+                    @Override
+                    public void onCompleted(Exception e, String result) {
+                        try {
+                            JSONArray json = new JSONArray(result);
+                            JSONObject jobject = json.getJSONObject(0);
+                            JSONArray defs = jobject.getJSONArray("defs");
+                            List<String> res = new ArrayList<>();
+                            res.add(jobject.getString("word") + ": " + defs.getString(0));
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, res);
+                            defnitionField.setAdapter(adapter);
+                            //get all definitions
+//                            for(int i=0; i<defs.length(); i++){
+//                                res.add(defs.getString(i));
+//                            }
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                });
     }
 }

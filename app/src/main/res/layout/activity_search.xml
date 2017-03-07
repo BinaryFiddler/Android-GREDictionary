@@ -27,10 +27,10 @@
             android:id="@+id/search_bar" />
 
         <Button
+            android:id="@+id/web_search_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Search"
-            android:onClick="searchAndDisplay"/>
+            android:text="Web search"/>
 
     </LinearLayout>
 
