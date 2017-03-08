@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.TextView;
+import android.database.sqlite.SQLiteStatement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +61,16 @@ public class Database {
     void openDB(Activity activity){
 
         db = activity.openOrCreateDatabase("Dictionary", MODE_PRIVATE, null);
+//        check if table exists
+        Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+TABLE_COMMENT+"'", null);
+        if(cursor!=null) {
+            if(cursor.getCount()>0) {
+                cursor.close();
+                return;
+            }
+            cursor.close();
+        }
+//      if table not exist, read the data from static files
         db.execSQL("DROP TABLE IF EXISTS wordlist;");
         db.execSQL(DATABASE_CREATE);
         Scanner scan = new Scanner(activity.getResources().openRawResource(R.raw.wordlist));
