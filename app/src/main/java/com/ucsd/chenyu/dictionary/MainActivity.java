@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.speech.tts.TextToSpeech;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,6 +28,10 @@ public class MainActivity extends Activity {
     @BindView(R.id.points_field) TextView pointsField;
     @BindView(R.id.next_word) Button nextWord;
     @BindView(R.id.search_field) Button searchField;
+
+//    @BindView(R.id.search_field) FloatingActionButton searchField;
+
+
 
     private Database dict;
     private TextToSpeech tts;
